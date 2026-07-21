@@ -34,6 +34,31 @@ class BalancedTree {
     }
     return false;
   }
+  insert(myValue) {
+    let checkValue = this.root;
+
+    while (checkValue != null) {
+      if (checkValue.data === myValue) {
+        console.log("exists already: " + myValue);
+        return; //already exists in tree
+      }
+      if (checkValue.data < myValue) {
+        if (checkValue.right === null) {
+          const myRoot = new TreeNode(myValue);
+          checkValue.setRight(myRoot);
+          return;
+        }
+        checkValue = checkValue.right;
+      } else {
+        if (checkValue.left === null) {
+          const myRoot = new TreeNode(myValue);
+          checkValue.setLeft(myRoot);
+          return;
+        }
+        checkValue = checkValue.left;
+      }
+    }
+  }
 }
 
 const tree = new BalancedTree([
@@ -52,3 +77,7 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 
 prettyPrint(tree.root);
 console.log(tree.includes(324));
+tree.insert(322);
+tree.insert(99);
+tree.insert(99);
+prettyPrint(tree.root);
