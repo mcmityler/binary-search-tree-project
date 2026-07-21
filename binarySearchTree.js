@@ -2,8 +2,6 @@ import { TreeNode } from "./treeNode.js";
 
 class BalancedTree {
   constructor(myArr = []) {
-    this.treeArray = myArr;
-
     const uniqueArr = [...new Set(myArr)]; //remove the duplicates
     uniqueArr.sort((a, b) => a - b); //sort the array from small to big
     this.root = this.#buildTree(uniqueArr, 0, uniqueArr.length);
@@ -19,6 +17,22 @@ class BalancedTree {
     myRoot.setRight(this.#buildTree(myArray, myMiddle + 1, myEnd));
 
     return myRoot;
+  }
+  includes(myValue) {
+    let checkValue = this.root;
+    while (checkValue != null) {
+      console.log(checkValue.data);
+
+      if (checkValue.data === myValue) {
+        return true;
+      }
+      if (checkValue.data < myValue) {
+        checkValue = checkValue.right;
+      } else {
+        checkValue = checkValue.left;
+      }
+    }
+    return false;
   }
 }
 
@@ -37,3 +51,4 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 };
 
 prettyPrint(tree.root);
+console.log(tree.includes(324));
