@@ -12,6 +12,7 @@ class BalancedTree {
     }
     const myMiddle = Math.floor((myStart + myEnd) / 2);
     const myRoot = new TreeNode(myArray[myMiddle]);
+    if (myArray[myMiddle] === undefined) return null;
 
     myRoot.setLeft(this.#buildTree(myArray, myStart, myMiddle - 1));
     myRoot.setRight(this.#buildTree(myArray, myMiddle + 1, myEnd));
@@ -48,12 +49,20 @@ class BalancedTree {
           checkValue.setRight(myRoot);
           return;
         }
+        // if (checkValue.right.data === null) {
+        //   checkValue.right.setValue(myValue);
+        //   return;
+        // }
         checkValue = checkValue.right;
       } else {
         if (checkValue.left === null) {
           checkValue.setLeft(myRoot);
           return;
         }
+        // if (checkValue.left.data === null) {
+        //   checkValue.left.setValue(myValue);
+        //   return;
+        // }
         checkValue = checkValue.left;
       }
     }
@@ -88,10 +97,30 @@ class BalancedTree {
     }
     return myRoot;
   }
+  levelOrderForEach(myCallback, myRoot) {
+    if (myCallback === undefined) {
+      throw new Error("No callback provided!");
+    }
+
+    //ideally queue should be a linked list so its O(1)
+    //but an array will be O(N) because of shift()
+    //however a levelorderforeach is a O(N) time complexity itself
+    if (myRoot === null) return;
+    const queue = [];
+    queue.push(myRoot);
+    while (queue.length != 0) {
+      const myCurrent = queue[0];
+      myCallback(myCurrent.data);
+      if (myCurrent.left !== null) queue.push(myCurrent.left);
+      if (myCurrent.right !== null) queue.push(myCurrent.right);
+      queue.shift();
+    }
+  }
 }
 
+// const tree = new BalancedTree([1, 7, 4]);
 const tree = new BalancedTree([
-  1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324,
+  1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 24,
 ]);
 
 const prettyPrint = (node, prefix = "", isLeft = true) => {
@@ -104,10 +133,16 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
 };
 
+const logPrint = (value) => {
+  console.log(value);
+};
+
 prettyPrint(tree.root);
-console.log(tree.includes(324));
+console.log(tree.includes("null"));
 tree.insert(322);
+tree.insert(6633);
 tree.insert(99);
 tree.insert(99);
-tree.deleteItem(tree.root, 99);
+// tree.deleteItem(tree.root, 99);
 prettyPrint(tree.root);
+tree.levelOrderForEach(logPrint, tree.root);
