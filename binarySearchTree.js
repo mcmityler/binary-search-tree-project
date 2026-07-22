@@ -36,6 +36,7 @@ class BalancedTree {
   }
   insert(myValue) {
     let checkValue = this.root;
+    const myRoot = new TreeNode(myValue);
 
     while (checkValue != null) {
       if (checkValue.data === myValue) {
@@ -44,14 +45,12 @@ class BalancedTree {
       }
       if (checkValue.data < myValue) {
         if (checkValue.right === null) {
-          const myRoot = new TreeNode(myValue);
           checkValue.setRight(myRoot);
           return;
         }
         checkValue = checkValue.right;
       } else {
         if (checkValue.left === null) {
-          const myRoot = new TreeNode(myValue);
           checkValue.setLeft(myRoot);
           return;
         }
