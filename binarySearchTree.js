@@ -115,6 +115,18 @@ class BalancedTree {
     myCallback(myRoot.data);
     this.inOrderForEach(myCallback, myRoot.right);
   }
+  preOrderForEach(myCallback, myRoot) {
+    if (myRoot === null) return;
+    myCallback(myRoot.data);
+    this.preOrderForEach(myCallback, myRoot.left);
+    this.preOrderForEach(myCallback, myRoot.right);
+  }
+  postOrderForEach(myCallback, myRoot) {
+    if (myRoot === null) return;
+    this.postOrderForEach(myCallback, myRoot.left);
+    this.postOrderForEach(myCallback, myRoot.right);
+    myCallback(myRoot.data);
+  }
 }
 
 // const tree = new BalancedTree([1, 7, 4]);
@@ -144,5 +156,7 @@ tree.insert(99);
 tree.insert(99);
 // tree.deleteItem(tree.root, 99);
 prettyPrint(tree.root);
-tree.levelOrderForEach(logPrint, tree.root);
-tree.inOrderForEach(logPrint, tree.root);
+// tree.levelOrderForEach(logPrint, tree.root);
+// tree.inOrderForEach(logPrint, tree.root);
+// tree.preOrderForEach(logPrint, tree.root);
+tree.postOrderForEach(logPrint, tree.root);
