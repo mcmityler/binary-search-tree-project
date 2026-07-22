@@ -4,6 +4,9 @@ export class TreeNode {
     this.left = null;
     this.right = null;
   }
+  setValue(myValue) {
+    this.data = myValue;
+  }
   setLeft(leftValue) {
     this.left = leftValue;
   }

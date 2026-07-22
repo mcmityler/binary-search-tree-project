@@ -58,6 +58,36 @@ class BalancedTree {
       }
     }
   }
+  getSuccessor(myRoot) {
+    myRoot = myRoot.right;
+    while (myRoot !== null && myRoot.left !== null) {
+      myRoot = myRoot.left;
+    }
+    return myRoot;
+  }
+  deleteItem(myRoot, myValue) {
+    if (myRoot === null) {
+      return myRoot;
+    }
+
+    if (myRoot.data > myValue) {
+      myRoot.left = this.deleteItem(myRoot.left, myValue);
+    } else if (myRoot.data < myValue) {
+      myRoot.right = this.deleteItem(myRoot.right, myValue);
+    } else {
+      if (myRoot.left === null) {
+        return myRoot.right;
+      }
+      if (myRoot.right === null) {
+        return myRoot.left;
+      }
+
+      const mySuccessor = this.getSuccessor(myRoot);
+      myRoot.data = mySuccessor.data;
+      myRoot.right = this.deleteItem(myRoot.right, mySuccessor.data);
+    }
+    return myRoot;
+  }
 }
 
 const tree = new BalancedTree([
@@ -79,4 +109,5 @@ console.log(tree.includes(324));
 tree.insert(322);
 tree.insert(99);
 tree.insert(99);
+tree.deleteItem(tree.root, 99);
 prettyPrint(tree.root);
