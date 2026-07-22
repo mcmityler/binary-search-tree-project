@@ -2,6 +2,7 @@ import { TreeNode } from "./treeNode.js";
 
 class BalancedTree {
   constructor(myArr = []) {
+    this.orderArray = [];
     const uniqueArr = [...new Set(myArr)]; //remove the duplicates
     uniqueArr.sort((a, b) => a - b); //sort the array from small to big
     this.root = this.#buildTree(uniqueArr, 0, uniqueArr.length);
@@ -110,22 +111,103 @@ class BalancedTree {
     }
   }
   inOrderForEach(myCallback, myRoot) {
+    if (myCallback === undefined) {
+      throw new Error("No callback provided!");
+    }
     if (myRoot === null) return;
     this.inOrderForEach(myCallback, myRoot.left);
     myCallback(myRoot.data);
     this.inOrderForEach(myCallback, myRoot.right);
   }
   preOrderForEach(myCallback, myRoot) {
+    if (myCallback === undefined) {
+      throw new Error("No callback provided!");
+    }
     if (myRoot === null) return;
     myCallback(myRoot.data);
     this.preOrderForEach(myCallback, myRoot.left);
     this.preOrderForEach(myCallback, myRoot.right);
   }
   postOrderForEach(myCallback, myRoot) {
+    if (myCallback === undefined) {
+      throw new Error("No callback provided!");
+    }
     if (myRoot === null) return;
     this.postOrderForEach(myCallback, myRoot.left);
     this.postOrderForEach(myCallback, myRoot.right);
     myCallback(myRoot.data);
+  }
+
+  heightFindRoot(myValue) {
+    let myRoot = this.root;
+    while (myRoot != null) {
+      if (myRoot.data === myValue) {
+        break;
+      } else if (myRoot.data > myValue) {
+        myRoot = myRoot.left;
+      } else if (myRoot.data < myValue) {
+        myRoot = myRoot.right;
+      }
+    }
+    if (myRoot === null) {
+      return undefined; //doesnt exist in tree
+    }
+    return this.height(myRoot);
+  }
+  height(myRoot) {
+    if (myRoot === null) {
+      return 0;
+    }
+    const leftHeight = this.height(myRoot.left);
+    const rightHeight = this.height(myRoot.right);
+    return 1 + Math.max(leftHeight, rightHeight);
+  }
+
+  depth(myValue) {
+    let depth = 0;
+    let myRoot = this.root;
+    while (myRoot != null) {
+      if (myRoot.data === myValue) {
+        break;
+      } else if (myRoot.data > myValue) {
+        depth++;
+        myRoot = myRoot.left;
+      } else if (myRoot.data < myValue) {
+        depth++;
+        myRoot = myRoot.right;
+      }
+    }
+    if (myRoot === null) {
+      return undefined;
+    }
+    return depth;
+  }
+  isBalanced(myRoot) {
+    if (myRoot === null) {
+      return 0;
+    }
+    const leftHeight = this.isBalanced(myRoot.left);
+    const rightHeight = this.isBalanced(myRoot.right);
+    if (
+      leftHeight + 1 === rightHeight ||
+      leftHeight === rightHeight ||
+      leftHeight - 1 === rightHeight
+    ) {
+      return 1 + Math.max(leftHeight, rightHeight);
+    }
+    return false;
+  }
+  rebalance() {
+    this.orderArray = [];
+    this.inOrderForEach((myValue) => {
+      this.orderArray.push(myValue);
+    }, tree.root);
+    console.log(this.orderArray);
+    this.root = this.#buildTree(this.orderArray, 0, this.orderArray.length);
+  }
+  inOrderArray(myValue) {
+    console.log(this.orderArray);
+    this.orderArray.push(myValue);
   }
 }
 
@@ -153,10 +235,17 @@ console.log(tree.includes("null"));
 tree.insert(322);
 tree.insert(6633);
 tree.insert(99);
-tree.insert(99);
+// tree.insert(99);
 // tree.deleteItem(tree.root, 99);
 prettyPrint(tree.root);
 // tree.levelOrderForEach(logPrint, tree.root);
 // tree.inOrderForEach(logPrint, tree.root);
 // tree.preOrderForEach(logPrint, tree.root);
-tree.postOrderForEach(logPrint, tree.root);
+// tree.postOrderForEach(logPrint, tree.root);
+console.log(tree.heightFindRoot(67));
+console.log(tree.depth(67));
+console.log(tree.isBalanced(tree.root));
+tree.rebalance();
+prettyPrint(tree.root);
+
+console.log(tree.isBalanced(tree.root));
