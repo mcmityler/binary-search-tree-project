@@ -12,6 +12,8 @@ class BalancedTree {
     }
     const myMiddle = Math.floor((myStart + myEnd) / 2);
     const myRoot = new TreeNode(myArray[myMiddle]);
+
+    //fixes problem i had with it adding one null node at the last right branch
     if (myArray[myMiddle] === undefined) return null;
 
     myRoot.setLeft(this.#buildTree(myArray, myStart, myMiddle - 1));
@@ -49,20 +51,12 @@ class BalancedTree {
           checkValue.setRight(myRoot);
           return;
         }
-        // if (checkValue.right.data === null) {
-        //   checkValue.right.setValue(myValue);
-        //   return;
-        // }
         checkValue = checkValue.right;
       } else {
         if (checkValue.left === null) {
           checkValue.setLeft(myRoot);
           return;
         }
-        // if (checkValue.left.data === null) {
-        //   checkValue.left.setValue(myValue);
-        //   return;
-        // }
         checkValue = checkValue.left;
       }
     }
@@ -102,12 +96,11 @@ class BalancedTree {
       throw new Error("No callback provided!");
     }
 
-    //ideally queue should be a linked list so its O(1)
-    //but an array will be O(N) because of shift()
-    //however a levelorderforeach is a O(N) time complexity itself
     if (myRoot === null) return;
+
     const queue = [];
     queue.push(myRoot);
+
     while (queue.length != 0) {
       const myCurrent = queue[0];
       myCallback(myCurrent.data);
@@ -115,6 +108,12 @@ class BalancedTree {
       if (myCurrent.right !== null) queue.push(myCurrent.right);
       queue.shift();
     }
+  }
+  inOrderForEach(myCallback, myRoot) {
+    if (myRoot === null) return;
+    this.inOrderForEach(myCallback, myRoot.left);
+    myCallback(myRoot.data);
+    this.inOrderForEach(myCallback, myRoot.right);
   }
 }
 
@@ -146,3 +145,4 @@ tree.insert(99);
 // tree.deleteItem(tree.root, 99);
 prettyPrint(tree.root);
 tree.levelOrderForEach(logPrint, tree.root);
+tree.inOrderForEach(logPrint, tree.root);
